@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "308940469871",
+    "project_id": "whoisolder-9651e",
+    "storage_bucket": "whoisolder-9651e.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:308940469871:android:d4fe13b7e73abd77893f9a",
+        "android_client_info": {
+          "package_name": "com.example.whoisolder"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "308940469871-5ktni02n841mlcpvt5c9qu1ib39fo8d1.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBDSKn_jlbOgn4TwfMY2NKbRW7wmMnm9hc"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "308940469871-5ktni02n841mlcpvt5c9qu1ib39fo8d1.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

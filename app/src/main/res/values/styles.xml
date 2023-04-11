@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <style name="Personalizado" parent="Theme.AppCompat">
+    <!-- Primary brand color. -->
+    <item name="colorPrimary">@color/cabecera</item>
+    <item name="colorPrimaryVariant">@color/cabecera</item>
+    <item name="colorOnPrimary">@color/cabecera</item>
+    </style>
+</resources>
