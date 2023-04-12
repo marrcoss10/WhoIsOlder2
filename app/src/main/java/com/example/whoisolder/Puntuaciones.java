@@ -57,7 +57,6 @@ public class Puntuaciones extends AppCompatActivity {
         });*/
         //Se recogen las variables del layout
         Button share = findViewById(R.id.btn_share);
-        Button foto = findViewById(R.id.btnFoto);
         //Se abre instagram en google para poder compartir la puntuacion
         share.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -65,13 +64,6 @@ public class Puntuaciones extends AppCompatActivity {
                 Uri web = Uri.parse("https://www.instagram.com/");
                 Intent webIntent = new Intent(Intent.ACTION_VIEW,web);
                 startActivity(webIntent);
-            }
-        });
-        //Se abre la camara para poder sacar la foto
-        foto.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                abrirCamara();
             }
         });
     }
@@ -101,18 +93,6 @@ public class Puntuaciones extends AppCompatActivity {
         });
         WorkManager.getInstance(Puntuaciones.this).enqueue(otwr);
 
-
-        //Se recogen todas las puntuaciones de la base de datoss
-        /*miBD gestor = new miBD(this,"Puntos",null,1);
-        SQLiteDatabase bd = gestor.getWritableDatabase();
-        //bd.execSQL("DELETE FROM Puntuaciones"); /*Para borrar todos los datos
-        Cursor c = bd.rawQuery("SELECT Nombre,Puntos FROM Puntuaciones",null);
-        while(c.moveToNext()){
-            listapuntos.add(c.getString(0) + " " + c.getInt(1));
-        }
-        c.close();
-        bd.close();*/
-
     }
     //Se elimina de la base de datos la fila con el nombre y puntos que ha dejado pulsado el usuario
     public void eliminarBD(String nombre, String puntos){
@@ -120,21 +100,5 @@ public class Puntuaciones extends AppCompatActivity {
         SQLiteDatabase bd = gestor.getWritableDatabase();
         bd.delete("Puntuaciones","Nombre=? AND Puntos=?",new String[]{nombre,puntos});
         bd.close();
-    }
-
-    //Funcion para abrir la camara
-    public void abrirCamara(){
-        Intent intCam = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-        startActivityForResult(intCam,1);
-    }
-
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == 1 && resultCode == RESULT_OK) {
-            Bundle extras = data.getExtras();
-            Bitmap imgBitmap = (Bitmap) extras.get("data");
-            ImageView fot = findViewById(R.id.foto);
-            fot.setImageBitmap(imgBitmap);
-        }
     }
 }

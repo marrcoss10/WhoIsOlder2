@@ -22,6 +22,7 @@ public class MainActivity extends AppCompatActivity {
         //Recoger variables del layout
         Button jugar = findViewById(R.id.btn_jugar);
         Button instrucciones = findViewById(R.id.btn_instrucciones);
+        Button galeria = findViewById(R.id.btnGaleria);
         //Crear el intent (Registrarse)
         jugar.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -36,6 +37,14 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View view) {
                 DialogoInstrucciones dialogo = new DialogoInstrucciones();
                 dialogo.show(getSupportFragmentManager(),"instrucciones");
+            }
+        });
+        //Llamar al la pantalla de galeria
+        galeria.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intentgaleria = new Intent(MainActivity.this, Galeria.class);
+                startActivity(intentgaleria);
             }
         });
     }
