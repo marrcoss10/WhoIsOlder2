@@ -41,21 +41,6 @@ public class Puntuaciones extends AppCompatActivity {
         //Se llama a la funcion de cargar las puntuaciones de la base de datos
         cargarPuntos();
         //Se recogen las variables del layout
-        list = findViewById(R.id.lista);
-        //Cuando pulse durante un tiempo un item, borra el item de la lista y de la base de datos
-        /*list.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
-            @Override
-            public boolean onItemLongClick(AdapterView<?> adapterView, View view, int i, long l) {
-                String borrar = listapuntos.get(i);
-                String nombre = borrar.split(" ")[0];
-                String puntos = borrar.split(" ")[1];
-                listapuntos.remove(i);
-                eliminarBD(nombre,puntos);
-                adaptador.notifyDataSetChanged();
-                return false;
-            }
-        });*/
-        //Se recogen las variables del layout
         Button share = findViewById(R.id.btn_share);
         //Se abre instagram en google para poder compartir la puntuacion
         share.setOnClickListener(new View.OnClickListener() {
@@ -93,12 +78,5 @@ public class Puntuaciones extends AppCompatActivity {
         });
         WorkManager.getInstance(Puntuaciones.this).enqueue(otwr);
 
-    }
-    //Se elimina de la base de datos la fila con el nombre y puntos que ha dejado pulsado el usuario
-    public void eliminarBD(String nombre, String puntos){
-        miBD gestor = new miBD(this,"Puntos",null,1);
-        SQLiteDatabase bd = gestor.getWritableDatabase();
-        bd.delete("Puntuaciones","Nombre=? AND Puntos=?",new String[]{nombre,puntos});
-        bd.close();
     }
 }

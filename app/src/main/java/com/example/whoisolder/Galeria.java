@@ -1,10 +1,16 @@
 package com.example.whoisolder;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.core.content.FileProvider;
+import androidx.lifecycle.Observer;
+import androidx.work.Data;
+import androidx.work.OneTimeWorkRequest;
+import androidx.work.WorkInfo;
+import androidx.work.WorkManager;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -21,8 +27,11 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.Toast;
 
+import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.messaging.FirebaseMessaging;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
@@ -34,13 +43,14 @@ import java.security.spec.EncodedKeySpec;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-/*Video -> https://www.youtube.com/watch?v=s1aOlr3vbbk&list=PLlGT4GXi8_8eopz0Gjkh40GG6O5KhL1V1&ab_channel=SmallAcademy*/
+//Video -> https://www.youtube.com/watch?v=s1aOlr3vbbk&list=PLlGT4GXi8_8eopz0Gjkh40GG6O5KhL1V1&ab_channel=SmallAcademy
 public class Galeria extends AppCompatActivity {
     ImageView fot;
     String currentPhotoPath;
     StorageReference storageReference;
     Uri direccion;
     Boolean vacio = true;
+    static String token;
     public static final int CAMERA_PERM_CODE = 101;
     public static final int CAMERA_REQUEST_CODE = 102;
     static final int REQUEST_TAKE_PHOTO = 1;
@@ -139,6 +149,8 @@ public class Galeria extends AppCompatActivity {
                     }
                 });
                 Toast.makeText(Galeria.this,"Upload Successfully.",Toast.LENGTH_SHORT).show();
+                //Se llama a la función que envia la notificacion del firebase
+                onTokenRefresh();
             }
         }).addOnFailureListener(new OnFailureListener() {
             @Override
@@ -178,10 +190,41 @@ public class Galeria extends AppCompatActivity {
             }
             //Continue only if the file was successfully created
             if(photoFile != null){
-                Uri photoURI = FileProvider.getUriForFile(this,"com.example.android.fileprovider",photoFile);
+                Uri photoURI = FileProvider.getUriForFile(this,"com.example.android.juegoDas.fileprovider",photoFile);
                 takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT,photoURI);
                 startActivityForResult(takePictureIntent,CAMERA_REQUEST_CODE);
             }
         }
+    }
+
+    //Se crea la función para notificar con el firebase
+    public void onTokenRefresh(){
+        FirebaseMessaging.getInstance().getToken().addOnCompleteListener(new OnCompleteListener<String>() {
+            @Override
+            public void onComplete(@NonNull Task<String> task) {
+                if (!task.isSuccessful()) {
+                    Log.w("NOTIFY", "Fetching FCM registration token failed", task.getException());
+                    return;
+                }
+
+                // Conseguir el token
+                token = task.getResult();
+
+                Log.d("NOTIFY", "Token: " + token);
+                Data data = new Data.Builder().putString("token", token).build();
+                OneTimeWorkRequest otwr = new OneTimeWorkRequest.Builder(NotifyFirebase.class).setInputData(data).build();
+                WorkManager.getInstance(Galeria.this).enqueue(otwr);
+                WorkManager.getInstance(Galeria.this).getWorkInfoByIdLiveData(otwr.getId()).observe(Galeria.this, new Observer<WorkInfo>() {
+                    public void onChanged(@Nullable WorkInfo workInfo) {
+                        if (workInfo != null && workInfo.getState().isFinished()) {
+                            //Se recoge el resultado devuelto
+                            String resultado = workInfo.getOutputData().getString("result");
+                            // Si el php devuelve que se ha identificado CORRECTAMENTE
+                            Log.d("NOTIFY", "Resultado --> " + resultado);
+                        }
+                    }
+                });
+            }
+        });
     }
 }

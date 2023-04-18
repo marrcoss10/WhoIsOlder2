@@ -22,8 +22,10 @@ public class insertarPuntuaciones extends Worker {
     @NonNull
     @Override
     public Result doWork() {
+        //Se recogen las variables de la clase principal para subirlas al servidor
         String nombre = getInputData().getString("nombre");
         int puntos = getInputData().getInt("puntos",0);
+        //Se establece la direccion con el fichero php del servidor
         String direccion = "http://ec2-54-93-62-124.eu-central-1.compute.amazonaws.com/mmartinez218/WEB/insertPuntos.php";
         HttpURLConnection urlConnection = null;
         try{
@@ -31,7 +33,7 @@ public class insertarPuntuaciones extends Worker {
             urlConnection = (HttpURLConnection) destino.openConnection();
             urlConnection.setConnectTimeout(5000);
             urlConnection.setReadTimeout(5000);
-
+            //Se establecen las variables para pasarselos al php
             String parametros = "nombre="+nombre+"&puntos="+puntos;
 
             urlConnection.setRequestMethod("POST");
@@ -57,6 +59,7 @@ public class insertarPuntuaciones extends Worker {
 
             return Result.success();
         }
+        //Si ha surgido cualquier error
         catch (Exception e){
             Log.d("DAS", "Error: " + e);
             return Result.failure();

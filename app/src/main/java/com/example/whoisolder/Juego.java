@@ -209,14 +209,16 @@ public class Juego extends AppCompatActivity {
             @Override
             public void onChanged (WorkInfo workInfo){
                 if (workInfo != null && workInfo.getState().isFinished()) {
-                    String[] listaNombres = workInfo.getOutputData().getStringArray("array1");
-                    String[] listaEdad = workInfo.getOutputData().getStringArray("array2");
+                    //Se recogen las variables recogidas por el select del php
+                    String[] listaNombres = workInfo.getOutputData().getStringArray("array1"); //Nombres de los famosos
+                    String[] listaEdad = workInfo.getOutputData().getStringArray("array2"); //Edad de los famosos
                     for(int i = 0; i < listaNombres.length; i++){
                         String nombre = listaNombres[i];
                         String edad = listaEdad[i];
                         map.put(nombre,Integer.parseInt(edad));
                         nombres.add(nombre);
                     }
+                    //Si es la primera vez que se accede a la pantalla se cargan los nombres de los famosos aleatorios junto a sus imagenes
                     if(cargar){
                         cargarNombresAleatorios();
                     }
